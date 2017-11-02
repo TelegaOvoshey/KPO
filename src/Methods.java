@@ -1,57 +1,59 @@
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
     public class Methods {
 
-        private int Layers=1;
         private ArrayList<Node> nodeList = new ArrayList<>();
 
 
 
-        public int getRandomNumbChild(int m, boolean first){
-            Random random = new Random();
-            int NumbChild;
-            if (first) {
-               NumbChild = random.nextInt(m-1)+1;
-            }
-            else NumbChild = random.nextInt(m)+1;
-            return NumbChild;
-        }
-
-        public void createTree(int m,int N){
-            int parentId = 0;
+        public void createTree(int m,int N, boolean deterministic){
             int childId = 1;
             int countLayers=0;
+            int countCh = m;
             boolean proof = true;
-            int rdm;
             while (proof){
                 if (countLayers==0){
-                    rdm = getRandomNumbChild(m,true);
-                    nodeList.add(new Node(parentId,childId,countLayers,rdm));
+                    if (deterministic){
+                        countCh = getRandomNumbChild(m,true);
+                    }
+                    nodeList.add(new Node(0,childId,countLayers,countCh));
                     childId++;countLayers++;
                 }else {
                     for (Node node:getParentOnLayers(countLayers-1)) {
-                        for(int i=0;i<node.getCountChild();i++){
-                            if (childId>N) proof = false;
-                            else{
-                            rdm = getRandomNumbChild(m,false);
-                            nodeList.add(new Node(node.getId(),childId ,countLayers, rdm));
-                            childId++;
+                        if (node.getCountChild()!=0){
+                            for(int i=0;i<node.getCountChild();i++){
+                                if (childId>N) proof = false;
+                                else {
+                                    if (deterministic) {
+                                        countCh = getRandomNumbChild(m, false);
+                                    }
+                                    nodeList.add(new Node(node.getId(), childId, countLayers, countCh));
+                                    childId++;
+                                }
                             }
                         }
+
                     }
+                    proofExistChild(countLayers);
                     countLayers++;
                 }
             }
-            for (Node node :nodeList) {
-                if (node.getLayers() == countLayers-1){
-                    node.setCountChild(0);
-                }
-            }
+            repairCountChild();
         }
 
+        private void repairCountChild(){
+            for (Node node:nodeList) {
+                int iterator=0;
+                for (Node bufNode: nodeList){
+                    if (node.getId() == bufNode.getPid()){
+                        iterator++;
+                    }
+                }
+                node.setCountChild(iterator);
+            }
+        }
 
         public ArrayList<Node> getParentOnLayers(int layers){
             ArrayList<Node> arrayPid = new ArrayList<Node>();
@@ -63,8 +65,35 @@ import java.util.Random;
             return arrayPid;
         }
 
+        public int getRandomNumbChild(int m, boolean first){
+            Random random = new Random();
+            int NumbChild;
+            if (first) {
+                NumbChild = random.nextInt(m)+1;
+            }
+            else{ NumbChild = random.nextInt(m+1);
+            }
+            return NumbChild;
+        }
+
+        private void proofExistChild(int countLayers){
+            boolean allZero=false;
+            for (Node node:getParentOnLayers(countLayers)) {
+                if (node.getCountChild()==0){
+                    allZero=true;
+                }else allZero=false;
+            }
+            if (allZero){
+                for (Node node: nodeList){
+                    if (node.equals(getParentOnLayers(countLayers).get(0))){
+                        node.setCountChild(1);
+                    }
+                }
+            }
+        }
 
         public String getHangingChild() {
+
             StringBuilder stringBuilder = new StringBuilder();
             for (Node node:nodeList) {
                 if (node.getCountChild()==0){
@@ -82,16 +111,6 @@ import java.util.Random;
             return stringBuilder.toString();
         }
 
-        private int getCountChildOnLayers(int layers){
-            int countChildren=0;
-
-            for (int i=0; i<nodeList.size();i++){
-                if (nodeList.get(i).getLayers() == layers){
-                    countChildren +=nodeList.get(i).getCountChild();
-                }
-            }
-            return countChildren;
-        }
 
     }
 
