@@ -19,27 +19,47 @@ import java.util.Random;
         public void createTree(int m,int N){
             int parentId = 0;
             int childId = 1;
-            int layers=1;
+            int countLayers=0;
             boolean proof = true;
+            boolean hang;
             while (proof){
-                if (layers==1){
-                    nodeList.add(new Node(parentId,childId,layers));
-                    childId++;parentId++;layers++;
+                if (countLayers==0){
+                    nodeList.add(new Node(parentId,childId,countLayers,false));
+                    childId++;parentId++;countLayers++;
                 }else {
-                    for (int i=0;i<getCountChildOnLayers(layers-1);i++){
-                        for (int j = 0; j < getRandomNumbChild(m); j++){
+                    for (int i=0;i<getCountChildOnLayers(countLayers-1);i++){
+                        int rdm = getRandomNumbChild(m);
+                        if (rdm == 0)hang = true;
+                        else hang = false;
+                        for (int j = 0; j <= rdm; j++){
                             if (childId>N){
                                 proof=false;
                             }else {
-                                nodeList.add(new Node(parentId,childId,layers));
+                                nodeList.add(new Node(parentId,childId,countLayers,hang));
                                 childId++;
                             }
                         }
                         parentId++;
                     }
-                    layers++;
+                    countLayers++;
                 }
             }
+            for (Node node :nodeList) {
+                if (node.getLayers() == countLayers-1){
+                    node.setHang(true);
+                }
+            }
+        }
+
+
+        public String getHangingChild() {
+            StringBuilder stringBuilder = new StringBuilder();
+            for (Node node:nodeList) {
+                if (node.isHang()){
+                    stringBuilder.append(node.toString());
+                }
+            }
+            return stringBuilder.toString();
         }
 
         public String getGraf(){
