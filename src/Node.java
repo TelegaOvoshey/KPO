@@ -4,12 +4,12 @@ public class Node {
     private int layers;
     private int pid;
     private int id;
-    private boolean hang;
-    public Node(int pid, int id, int layers,boolean hang) {
+    private int countChild;
+    public Node(int pid, int id, int layers,int countChild) {
         this.pid = pid;
         this.id = id;
         this.layers =layers;
-        this.hang = hang;
+        this.countChild = countChild;
     }
 
     public Node() {
@@ -39,12 +39,12 @@ public class Node {
         this.layers = layers;
     }
 
-    public boolean isHang() {
-        return hang;
+    public int getCountChild() {
+        return countChild;
     }
 
-    public void setHang(boolean hang) {
-        this.hang = hang;
+    public void setCountChild(int hang) {
+        this.countChild = hang;
     }
 
     @Override
@@ -55,17 +55,17 @@ public class Node {
         return layers == node.layers &&
                 pid == node.pid &&
                 id == node.id &&
-                hang == node.hang;
+                countChild == node.countChild;
     }
 
     @Override
     public int hashCode() {
 
-        return Objects.hash(layers, pid, id, hang);
+        return Objects.hash(layers, pid, id, countChild);
     }
 
     @Override
     public String toString() {
-        return   id+"-"+pid+"  ;уровень:"+layers+" ;Висячий ="+hang+"\n";
+        return   id+"-"+pid+"  ;уровень:"+layers+" ;Количество детей ="+countChild+"\n";
     }
 }

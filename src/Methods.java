@@ -10,9 +10,13 @@ import java.util.Random;
 
 
 
-        public int getRandomNumbChild(int m){
+        public int getRandomNumbChild(int m, boolean first){
             Random random = new Random();
-            int NumbChild = random.nextInt(m);
+            int NumbChild;
+            if (first) {
+               NumbChild = random.nextInt(m-1)+1;
+            }
+            else NumbChild = random.nextInt(m)+1;
             return NumbChild;
         }
 
@@ -21,41 +25,49 @@ import java.util.Random;
             int childId = 1;
             int countLayers=0;
             boolean proof = true;
-            boolean hang;
+            int rdm;
             while (proof){
                 if (countLayers==0){
-                    nodeList.add(new Node(parentId,childId,countLayers,false));
-                    childId++;parentId++;countLayers++;
+                    rdm = getRandomNumbChild(m,true);
+                    nodeList.add(new Node(parentId,childId,countLayers,rdm));
+                    childId++;countLayers++;
                 }else {
-                    for (int i=0;i<getCountChildOnLayers(countLayers-1);i++){
-                        int rdm = getRandomNumbChild(m);
-                        if (rdm == 0)hang = true;
-                        else hang = false;
-                        for (int j = 0; j <= rdm; j++){
-                            if (childId>N){
-                                proof=false;
-                            }else {
-                                nodeList.add(new Node(parentId,childId,countLayers,hang));
-                                childId++;
+                    for (Node node:getParentOnLayers(countLayers-1)) {
+                        for(int i=0;i<node.getCountChild();i++){
+                            if (childId>N) proof = false;
+                            else{
+                            rdm = getRandomNumbChild(m,false);
+                            nodeList.add(new Node(node.getId(),childId ,countLayers, rdm));
+                            childId++;
                             }
                         }
-                        parentId++;
                     }
                     countLayers++;
                 }
             }
             for (Node node :nodeList) {
                 if (node.getLayers() == countLayers-1){
-                    node.setHang(true);
+                    node.setCountChild(0);
                 }
             }
+        }
+
+
+        public ArrayList<Node> getParentOnLayers(int layers){
+            ArrayList<Node> arrayPid = new ArrayList<Node>();
+            for(Node node: nodeList){
+                if (node.getLayers() == layers){
+                    arrayPid.add(node);
+                }
+            }
+            return arrayPid;
         }
 
 
         public String getHangingChild() {
             StringBuilder stringBuilder = new StringBuilder();
             for (Node node:nodeList) {
-                if (node.isHang()){
+                if (node.getCountChild()==0){
                     stringBuilder.append(node.toString());
                 }
             }
@@ -75,7 +87,7 @@ import java.util.Random;
 
             for (int i=0; i<nodeList.size();i++){
                 if (nodeList.get(i).getLayers() == layers){
-                    countChildren++;
+                    countChildren +=nodeList.get(i).getCountChild();
                 }
             }
             return countChildren;
