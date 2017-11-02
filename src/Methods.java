@@ -20,15 +20,20 @@ import java.util.Random;
             int parentId = 0;
             int childId = 1;
             int layers=1;
-            while (childId<= N){
+            boolean proof = true;
+            while (proof){
                 if (layers==1){
                     nodeList.add(new Node(parentId,childId,layers));
                     childId++;parentId++;layers++;
                 }else {
                     for (int i=0;i<getCountChildOnLayers(layers-1);i++){
                         for (int j = 0; j < getRandomNumbChild(m); j++){
-                            nodeList.add(new Node(parentId,childId,layers));
-                            childId++;
+                            if (childId>N){
+                                proof=false;
+                            }else {
+                                nodeList.add(new Node(parentId,childId,layers));
+                                childId++;
+                            }
                         }
                         parentId++;
                     }
