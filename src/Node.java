@@ -66,6 +66,6 @@ public class Node {
 
     @Override
     public String toString() {
-        return   id+"-"+pid+"  ;уровень:"+layers+" ;Количество детей ="+countChild+"\n";
+        return   id+"-"+pid+"; уровень:"+layers+"; Количество детей ="+countChild+"\n";
     }
 }
