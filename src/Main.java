@@ -1,7 +1,7 @@
 public class Main {
     public static void main(String[] args) {
         int m=5;
-        int N=20;
+        int N=200;
         int R=100;
         Methods methods = new Methods(N,m);
         methods.createTree(false);
@@ -15,22 +15,34 @@ public class Main {
         StringBuilder stringBuilder = new StringBuilder();
         double midleValueAlpha=0;
         double midleValueVertex=0;
-        stringBuilder.append("№").append("_|_").append("N").append("_|_").append("P").append("_|_").append("ALFA").append("\n");
+        double midleValueLayouts=0;
+        stringBuilder.append("№").append("__|__").append("N").append("__|__").append("P").append("__|__").append("ALPHA").append("\n");
         for (int i=0;i<R;i++){
             methods= new Methods(N,m);
             methods.createTree(false);
             int countHangingNodes = methods.getCountHangingNodes();
             double alpha=methods.getAlpha();
-            stringBuilder.append(i).append("_|_").append(N).append("_|_").append(countHangingNodes).append("_|_").append(String.format("%(.2f",alpha)).append("\n");
+            int countLayouts = methods.getCountLayouts();
+            stringBuilder.append(i).append("_|_").append(N).append("_|_").append(countHangingNodes).append("_|_").append(countLayouts).append("_|_").append(String.format("%(.2f",alpha)).append("\n");
 
             midleValueVertex +=countHangingNodes;
             midleValueAlpha += alpha;
+            midleValueLayouts +=countLayouts;
         }
         midleValueVertex = midleValueVertex/R;
         midleValueAlpha = midleValueAlpha/R;
+        midleValueLayouts = midleValueLayouts/R;
         System.out.println(stringBuilder.toString());
         System.out.println("Среднее число вершин = "+N);
         System.out.println("Среднее число висячих вершин = "+String.format("%(.2f",midleValueVertex));
         System.out.println("Среднее число значений alpha = "+String.format("%(.2f",midleValueAlpha));
+        System.out.println("Среднее число вершин = "+String.format("%(.2f",midleValueLayouts));
+
+        System.out.println("Кол-ва случайных значений при m-1");
+        StringBuilder stringBuilder1 = new StringBuilder();
+        for (Integer integer: methods.getCountRndm()) {
+           stringBuilder1.append(integer).append("\n");
+        }
+        System.out.println(stringBuilder1.toString());
     }
 }

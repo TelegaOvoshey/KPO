@@ -75,7 +75,29 @@ import java.util.Random;
             return countHangingNodes;
         }
 
-        public ArrayList<Node> getParentOnLayers(int layers){
+        public int getCountLayouts(){
+            int bufCount=0;
+            for (Node node: nodeList) {
+                if (node.getLayers()>bufCount) bufCount = node.getLayers();
+            }
+            return bufCount;
+        }
+        public ArrayList<Integer> getCountRndm(){
+            ArrayList <Integer> integers = new ArrayList<>();
+
+            for (int i =0;i<m;i++){
+                int bufInt=0;
+                for (Node node:nodeList) {
+                    if (node.getCountChild() == i){
+                        bufInt++;
+                    }
+                }
+                integers.add(i,bufInt);
+            }
+           return integers;
+        }
+
+        private ArrayList<Node> getParentOnLayers(int layers){
             ArrayList<Node> arrayPid = new ArrayList<Node>();
             for(Node node: nodeList){
                 if (node.getLayers() == layers){
@@ -85,7 +107,7 @@ import java.util.Random;
             return arrayPid;
         }
 
-        public int getRandomNumbChild(int m, boolean first){
+        private int getRandomNumbChild(int m, boolean first){
             Random random = new Random();
             int NumbChild;
             if (first) {
