@@ -1,5 +1,6 @@
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
     public class Methods {
@@ -65,6 +66,20 @@ import java.util.Random;
             return (double)N/getCountHangingNodes();
         }
 
+        public double getAlphaDispersion(List<Double> listAlpha){
+            double D;
+            double squareAlpha=0;
+            double squareMidle=0;
+            for (double v:listAlpha) {
+                squareAlpha +=Math.pow(v,2);
+                squareMidle +=v;
+            }
+            squareAlpha = squareAlpha/listAlpha.size();
+            squareMidle = Math.pow((squareMidle /listAlpha.size()),2);
+            D = squareAlpha - squareMidle;
+            return D;
+        }
+
         public int getCountHangingNodes(){
             int countHangingNodes =0;
             for (Node node:nodeList) {
@@ -98,7 +113,7 @@ import java.util.Random;
         }
 
         private ArrayList<Node> getParentOnLayers(int layers){
-            ArrayList<Node> arrayPid = new ArrayList<Node>();
+            ArrayList<Node> arrayPid = new ArrayList<>();
             for(Node node: nodeList){
                 if (node.getLayers() == layers){
                     arrayPid.add(node);

@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 public class Main {
     public static void main(String[] args) {
         int m=5;
@@ -16,6 +18,7 @@ public class Main {
         double midleValueAlpha=0;
         double midleValueVertex=0;
         double midleValueLayouts=0;
+        ArrayList<Double> listAlpha = new ArrayList<>();
         stringBuilder.append("№").append("__|__").append("N").append("__|__").append("P").append("__|__").append("ALPHA").append("\n");
         for (int i=0;i<R;i++){
             methods= new Methods(N,m);
@@ -24,19 +27,21 @@ public class Main {
             double alpha=methods.getAlpha();
             int countLayouts = methods.getCountLayouts();
             stringBuilder.append(i).append("_|_").append(N).append("_|_").append(countHangingNodes).append("_|_").append(countLayouts).append("_|_").append(String.format("%(.2f",alpha)).append("\n");
-
             midleValueVertex +=countHangingNodes;
+            listAlpha.add(alpha);
             midleValueAlpha += alpha;
             midleValueLayouts +=countLayouts;
         }
         midleValueVertex = midleValueVertex/R;
         midleValueAlpha = midleValueAlpha/R;
         midleValueLayouts = midleValueLayouts/R;
+
         System.out.println(stringBuilder.toString());
         System.out.println("Среднее число вершин = "+N);
         System.out.println("Среднее число висячих вершин = "+String.format("%(.2f",midleValueVertex));
         System.out.println("Среднее число значений alpha = "+String.format("%(.2f",midleValueAlpha));
         System.out.println("Среднее число вершин = "+String.format("%(.2f",midleValueLayouts));
+        System.out.println("Значение дисперсии alpha = "+String.format("%(.5f",methods.getAlphaDispersion(listAlpha)));
 
         System.out.println("Кол-ва случайных значений при m-1");
         StringBuilder stringBuilder1 = new StringBuilder();
